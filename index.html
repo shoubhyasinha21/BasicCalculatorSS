@@ -5,28 +5,24 @@
 <meta charset="UTF-8">
 <title>SS Basic Calculator</title>
 
-<meta name="description" content="Free online basic calculator created by Shoubhya. Perform fast calculations easily.">
-<meta name="keywords" content="calculator, basic calculator, online calculator">
+<meta name="description" content="Free online basic calculator created by Shoubhya.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-
-/* BODY FIX */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, slateblue, midnightblue, darkslategray);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* 🔥 TOP ALIGN */
-    padding-top: 20px;
 }
 
 /* MAIN LAYOUT */
 .wrapper {
     display: flex;
+    justify-content: center;
+    align-items: flex-start; /* TOP ALIGN */
     gap: 20px;
+    height: 100vh;
+    padding-top: 20px;
 }
 
 /* LEFT SECTION */
@@ -35,24 +31,21 @@ body {
     color: white;
 }
 
-/* TITLE */
+/* TITLE TOP LEFT */
 .left-title {
     font-size: 28px;
     font-weight: bold;
-    margin-bottom: 15px;
+    text-align: center;
+    margin-bottom: 20px; /* GAP BELOW TITLE */
 }
 
-/* ABOUT */
-.about h2 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.about p {
+/* ABOUT SECTION */
+.about {
     font-size: 14px;
+    line-height: 1.5;
 }
 
-/* CALCULATOR */
+/* CALCULATOR CENTER */
 .calculator {
     width: 380px;
     background: rgba(255,255,255,0.1);
@@ -68,14 +61,14 @@ body {
     height: 70px;
     font-size: 28px;
     text-align: right;
+    border: none;
     border-radius: 15px;
     padding: 10px;
     background: rgba(0,0,0,0.4);
     color: white;
-    border: none;
 }
 
-/* BUTTON GRID */
+/* BUTTONS */
 .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -85,19 +78,19 @@ body {
 
 button {
     padding: 15px;
-    border-radius: 50px;
     border: none;
+    border-radius: 50px;
     background: rgba(255,255,255,0.2);
     color: white;
     cursor: pointer;
 }
 
-.operator { background: darkorange; }
-.equal { background: forestgreen; }
-.scientific { background: royalblue; }
-.memory { background: mediumpurple; }
+.operator { background: DarkOrange; }
+.equal { background: ForestGreen; }
+.scientific { background: RoyalBlue; }
+.memory { background: MediumPurple; }
 
-/* HISTORY */
+/* HISTORY RIGHT */
 .history {
     width: 220px;
     height: 450px;
@@ -108,7 +101,7 @@ button {
     overflow-y: auto;
 }
 
-/* MOBILE FIX */
+/* MOBILE FIX (NO SCROLL) */
 @media (max-width: 768px) {
     body {
         overflow: hidden;
@@ -119,7 +112,6 @@ button {
         transform-origin: top center;
     }
 }
-
 </style>
 </head>
 
@@ -129,13 +121,15 @@ button {
 
     <!-- LEFT -->
     <div class="left-section">
-        <div class="left-title">SS BASIC<br>CALCULATOR</div>
+        <div class="left-title">
+            SS BASIC<br>CALCULATOR
+        </div>
 
         <div class="about">
-            <h2>About This Calculator</h2>
+            <h3>About</h3>
             <p>
-                Free scientific calculator with memory, history,
-                and functions like sin, cos, tan, log, etc.
+                Free online scientific calculator with memory,
+                history, and functions like sin, cos, tan, log, etc.
             </p>
         </div>
     </div>
@@ -199,32 +193,58 @@ let historyBox = document.getElementById("historyBox");
 let memory = 0;
 let historyList = [];
 
-function append(value) { display.value += value; }
-function clearDisplay() { display.value = ""; }
-function backspace() { display.value = display.value.slice(0, -1); }
+function append(value) {
+    display.value += value;
+}
+
+function clearDisplay() {
+    display.value = "";
+}
+
+function backspace() {
+    display.value = display.value.slice(0, -1);
+}
 
 function toRadians(deg) {
     return deg * (Math.PI / 180);
 }
 
 function calculate() {
+    if (!display.value) return;
+
     let expr = display.value;
+
     try {
-        expr = expr.replace(/sin\(/g,"Math.sin(toRadians(")
-                   .replace(/cos\(/g,"Math.cos(toRadians(")
-                   .replace(/tan\(/g,"Math.tan(toRadians(")
-                   .replace(/√\(/g,"Math.sqrt(")
-                   .replace(/log\(/g,"Math.log10(")
-                   .replace(/ln\(/g,"Math.log(")
-                   .replace(/π/g,"Math.PI")
-                   .replace(/e/g,"Math.E");
+        expr = expr.replace(/sin\(/g, "Math.sin(toRadians(");
+        expr = expr.replace(/cos\(/g, "Math.cos(toRadians(");
+        expr = expr.replace(/tan\(/g, "Math.tan(toRadians(");
+        expr = expr.replace(/√\(/g, "Math.sqrt(");
+        expr = expr.replace(/log\(/g, "Math.log10(");
+        expr = expr.replace(/ln\(/g, "Math.log(");
+        expr = expr.replace(/π/g, "Math.PI");
+        expr = expr.replace(/e/g, "Math.E");
 
         let result = eval(expr);
+
+        addHistory(display.value + " = " + result);
         display.value = result;
+
     } catch {
         display.value = "Error";
+        setTimeout(() => display.value = "", 1500);
     }
 }
+
+function addHistory(item) {
+    historyList.push(item);
+    if(historyList.length > 10) historyList.shift();
+    historyBox.innerHTML = "<b>History</b><hr>" + historyList.slice().reverse().join("<br>");
+}
+
+function memoryClear() { memory = 0; }
+function memoryRecall() { display.value += memory; }
+function memoryAdd() { memory += Number(display.value) || 0; }
+function memorySub() { memory -= Number(display.value) || 0; }
 </script>
 
 </body>
