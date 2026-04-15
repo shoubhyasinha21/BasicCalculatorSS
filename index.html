@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SS Basic Calculator</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            /* Using specific color names */
+            background: linear-gradient(135deg, slateblue, midnightblue, darkslategray);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .left-title {
+            width: 180px;
+            color: White;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .calculator {
+            width: 380px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        #display {
+            width: 100%;
+            height: 70px;
+            font-size: 28px;
+            text-align: right;
+            border: none;
+            outline: none;
+            border-radius: 15px;
+            padding: 10px;
+            box-sizing: border-box;
+            background: rgba(0,0,0,0.4);
+            color: white;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            color: White;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .operator { background: DarkOrange; }
+        .equal { background: ForestGreen; }
+        .scientific { background: RoyalBlue; }
+        .memory { background: MediumPurple; }
+
+        .history {
+            width: 220px;
+            background: rgba(0, 0, 0, 0.3);
+            color: White;
+            padding: 15px;
+            border-radius: 15px;
+            height: 450px;
+            overflow-y: auto;
+            font-size: 14px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="left-title">SS BASIC<br>CALCULATOR</div>
+
+    <div class="calculator">
+        <input type="text" id="display" readonly>
+        <div class="buttons">
+            <button onclick="memoryClear()" class="memory">MC</button>
+            <button onclick="memoryRecall()" class="memory">MR</button>
+            <button onclick="memoryAdd()" class="memory">M+</button>
+            <button onclick="memorySub()" class="memory">M-</button>
+
+            <button onclick="clearDisplay()">C</button>
+            <button onclick="append('(')">(</button>
+            <button onclick="append(')')">)</button>
+            <button onclick="append('/')">/</button>
+
+            <button onclick="append('7')">7</button>
+            <button onclick="append('8')">8</button>
+            <button onclick="append('9')">9</button>
+            <button onclick="append('*')" class="operator">*</button>
+
+            <button onclick="append('4')">4</button>
+            <button onclick="append('5')">5</button>
+            <button onclick="append('6')">6</button>
+            <button onclick="append('-')" class="operator">-</button>
+
+            <button onclick="append('1')">1</button>
+            <button onclick="append('2')">2</button>
+            <button onclick="append('3')">3</button>
+            <button onclick="append('+')" class="operator">+</button>
+
+            <button onclick="append('0')">0</button>
+            <button onclick="append('.')">.</button>
+            <button onclick="calculate()" class="equal">=</button>
+            <button onclick="backspace()">⌫</button>
+
+            <button onclick="append('sin(')" class="scientific">sin</button>
+            <button onclick="append('cos(')" class="scientific">cos</button>
+            <button onclick="append('tan(')" class="scientific">tan</button>
+            <button onclick="append('√(')" class="scientific">√</button>
+            <button onclick="append('log(')" class="scientific">log</button>
+            <button onclick="append('ln(')" class="scientific">ln</button>
+            <button onclick="append('π')" class="scientific">π</button>
+            <button onclick="append('e')" class="scientific">e</button>
+        </div>
+    </div>
+
+    <div class="history" id="historyBox">
+        <b>History</b><hr>
+    </div>
+</div>
+
+<script>
+    let display = document.getElementById("display");
+    let historyBox = document.getElementById("historyBox");
+    let memory = 0;
+    let historyList = [];
+
+    function append(value) {
+        display.value += value;
+    }
+
+    function clearDisplay() {
+        display.value = "";
+    }
+
+    function backspace() {
+        display.value = display.value.slice(0, -1);
+    }
+
+    function toRadians(deg) {
+        return deg * (Math.PI / 180);
+    }
+
+    function calculate() {
+        if (!display.value) return;
+        
+        let originalExpr = display.value;
+        let expr = originalExpr;
+
+        try {
+            // Replacements using global flags and correct Math functions
+            expr = expr.replace(/sin\(/g, "Math.sin(toRadians(");
+            expr = expr.replace(/cos\(/g, "Math.cos(toRadians(");
+            expr = expr.replace(/tan\(/g, "Math.tan(toRadians(");
+            expr = expr.replace(/√\(/g, "Math.sqrt(");
+            expr = expr.replace(/log\(/g, "Math.log10(");
+            expr = expr.replace(/ln\(/g, "Math.log(");
+            expr = expr.replace(/π/g, "Math.PI");
+            expr = expr.replace(/e/g, "Math.E");
+
+            // Count parentheses to close them automatically if user forgot
+            let openBrackets = (expr.match(/\(/g) || []).length;
+            let closeBrackets = (expr.match(/\)/g) || []).length;
+            while(openBrackets > closeBrackets) {
+                expr += ")";
+                openBrackets--;
+            }
+
+            let result = eval(expr);
+            
+            // Limit decimals for clean look
+            if (result % 1 !== 0) result = parseFloat(result.toFixed(8));
+
+            addHistory(originalExpr + " = " + result);
+            display.value = result;
+        } catch (e) {
+            display.value = "Error";
+            setTimeout(() => { display.value = ""; }, 1500);
+        }
+    }
+
+    function addHistory(item) {
+        historyList.push(item);
+        if(historyList.length > 10) historyList.shift();
+        historyBox.innerHTML = "<b>History</b><hr>" + historyList.reverse().join("<br>");
+        historyList.reverse(); // Reset order for internal array
+    }
+
+    function memoryClear() { memory = 0; alert("Memory Cleared"); }
+    function memoryRecall() { display.value += memory; }
+    function memoryAdd() { memory += Number(display.value) || 0; }
+    function memorySub() { memory -= Number(display.value) || 0; }
+</script>
+
+</body>
+</html>
