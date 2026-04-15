@@ -116,7 +116,6 @@ button:hover {
     background: rgba(0, 0, 0, 0.3);
     color: White;
     padding: 15px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     border-radius: 15px;
     height: 450px;
     overflow-y: auto;
@@ -227,24 +226,39 @@ function backspace() {
     display.value = display.value.slice(0, -1);
 }
 
-function toRadians(deg) {
+// Ensure this is global for eval
+window.toRadians = function(deg) {
     return deg * (Math.PI / 180);
-}
+};
 
 function calculate() {
     if (!display.value) return;
+    
+    // Automatic parenthesis closing for sin(90 -> sin(90)
+    let openParentheses = (display.value.match(/\(/g) || []).length;
+    let closeParentheses = (display.value.match(/\)/g) || []).length;
+    while (openParentheses > closeParentheses) {
+        display.value += ")";
+        closeParentheses++;
+    }
+
     let originalExpr = display.value;
     let expr = originalExpr;
 
     try {
-        expr = expr.replace(/sin\(/g, "Math.sin(toRadians(");
-        expr = expr.replace(/cos\(/g, "Math.cos(toRadians(");
-        expr = expr.replace(/tan\(/g, "Math.tan(toRadians(");
+        // Correct replacement logic
+        expr = expr.replace(/sin\(/g, "Math.sin(window.toRadians(");
+        expr = expr.replace(/cos\(/g, "Math.cos(window.toRadians(");
+        expr = expr.replace(/tan\(/g, "Math.tan(window.toRadians(");
         expr = expr.replace(/√\(/g, "Math.sqrt(");
         expr = expr.replace(/log\(/g, "Math.log10(");
         expr = expr.replace(/ln\(/g, "Math.log(");
         expr = expr.replace(/π/g, "Math.PI");
         expr = expr.replace(/e/g, "Math.E");
+
+        // Important: Close the toRadians parenthesis for trig functions
+        // This regex finds the end of the trig function arguments and adds a second ')'
+        expr = expr.replace(/(Math\.(sin|cos|tan)\(window\.toRadians\([^)]+)\)/g, "$1))");
 
         let result = eval(expr);
         
@@ -255,7 +269,7 @@ function calculate() {
         addHistory(originalExpr + " = " + result);
         display.value = result;
 
-    } catch {
+    } catch (e) {
         display.value = "Error";
         setTimeout(() => display.value = "", 1500);
     }
