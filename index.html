@@ -11,105 +11,143 @@
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, slateblue, midnightblue, darkslategray);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #4b44b6, #2d345e, #1a1c2c);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 /* MAIN LAYOUT */
 .wrapper {
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* TOP ALIGN */
-    gap: 20px;
-    height: 100vh;
-    padding-top: 20px;
+    align-items: flex-start;
+    gap: 30px;
+    width: 95%;
+    max-width: 1200px;
+    position: relative;
 }
 
-/* LEFT SECTION */
+/* LEFT SECTION - Now matches Picture 2 */
 .left-section {
-    width: 200px;
+    width: 250px;
     color: white;
+    text-align: left; /* Aligned top-left per Picture 2 */
 }
 
-/* TITLE TOP LEFT */
+/* TITLE STYLE */
 .left-title {
-    font-size: 28px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 20px; /* GAP BELOW TITLE */
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
 }
 
 /* ABOUT SECTION */
 .about {
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.6;
+    opacity: 0.9;
 }
 
-/* CALCULATOR CENTER */
+.about h3 {
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+/* CALCULATOR STYLING */
 .calculator {
     width: 380px;
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(15px);
-    border-radius: 25px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    padding: 25px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
 }
 
-/* DISPLAY */
+/* SCREEN */
 #display {
     width: 100%;
-    height: 70px;
-    font-size: 28px;
+    height: 80px;
+    font-size: 32px;
     text-align: right;
     border: none;
     border-radius: 15px;
-    padding: 10px;
-    background: rgba(0,0,0,0.4);
+    padding: 15px;
+    background: #000000; /* Darker display like Picture 2 */
     color: white;
+    box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
-/* BUTTONS */
+/* BUTTONS GRID */
 .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-top: 15px;
+    gap: 12px;
 }
 
 button {
-    padding: 15px;
+    height: 55px;
     border: none;
-    border-radius: 50px;
-    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.15);
     color: white;
+    font-size: 18px;
     cursor: pointer;
+    transition: transform 0.1s, background 0.2s;
 }
 
-.operator { background: DarkOrange; }
-.equal { background: ForestGreen; }
-.scientific { background: RoyalBlue; }
-.memory { background: MediumPurple; }
+button:active {
+    transform: scale(0.95);
+}
 
-/* HISTORY RIGHT */
+.operator { background: #ff9500; } /* Orange */
+.equal { background: #28a745; }    /* Green */
+.scientific { background: #3a7bd5; } /* Blue */
+.memory { background: #9d81e1; }    /* Purple */
+
+/* HISTORY PANEL */
 .history {
-    width: 220px;
-    height: 450px;
-    background: rgba(0,0,0,0.3);
+    width: 280px;
+    height: 480px;
+    background: rgba(10, 15, 35, 0.6);
     color: white;
-    padding: 15px;
-    border-radius: 15px;
+    padding: 20px;
+    border-radius: 20px;
     overflow-y: auto;
+    font-family: monospace;
 }
 
-/* MOBILE FIX (NO SCROLL) */
-@media (max-width: 768px) {
-    body {
-        overflow: hidden;
-    }
+.history b {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 10px;
+}
 
+.history hr {
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    margin-bottom: 15px;
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 900px) {
     .wrapper {
-        transform: scale(0.7);
-        transform-origin: top center;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        padding-top: 50px;
+    }
+    .left-section {
+        width: 100%;
+        text-align: center;
     }
 }
 </style>
@@ -119,24 +157,22 @@ button {
 
 <div class="wrapper">
 
-    <!-- LEFT -->
     <div class="left-section">
         <div class="left-title">
             SS BASIC<br>CALCULATOR
         </div>
 
         <div class="about">
-            <h3>About</h3>
+            <h3>About This Calculator</h3>
             <p>
-                Free online scientific calculator with memory,
-                history, and functions like sin, cos, tan, log, etc.
+                This is a free online scientific calculator with memory functions, 
+                history tracking, and trigonometric calculations like sin, cos, tan, log, and more.
             </p>
         </div>
     </div>
 
-    <!-- CENTER -->
     <div class="calculator">
-        <input type="text" id="display" readonly>
+        <input type="text" id="display" readonly placeholder="0">
 
         <div class="buttons">
             <button onclick="memoryClear()" class="memory">MC</button>
@@ -180,16 +216,17 @@ button {
         </div>
     </div>
 
-    <!-- RIGHT -->
     <div class="history" id="historyBox">
-        <b>History</b><hr>
+        <b>History</b>
+        <hr>
+        <div id="historyContent"></div>
     </div>
 
 </div>
 
 <script>
 let display = document.getElementById("display");
-let historyBox = document.getElementById("historyBox");
+let historyContent = document.getElementById("historyContent");
 let memory = 0;
 let historyList = [];
 
@@ -211,8 +248,8 @@ function toRadians(deg) {
 
 function calculate() {
     if (!display.value) return;
-
-    let expr = display.value;
+    let originalExpr = display.value;
+    let expr = originalExpr;
 
     try {
         expr = expr.replace(/sin\(/g, "Math.sin(toRadians(");
@@ -225,8 +262,13 @@ function calculate() {
         expr = expr.replace(/e/g, "Math.E");
 
         let result = eval(expr);
+        
+        // Formatting result to avoid long decimals
+        if (!Number.isInteger(result)) {
+            result = parseFloat(result.toFixed(8));
+        }
 
-        addHistory(display.value + " = " + result);
+        addHistory(originalExpr + " = " + result);
         display.value = result;
 
     } catch {
@@ -238,10 +280,10 @@ function calculate() {
 function addHistory(item) {
     historyList.push(item);
     if(historyList.length > 10) historyList.shift();
-    historyBox.innerHTML = "<b>History</b><hr>" + historyList.slice().reverse().join("<br>");
+    historyContent.innerHTML = historyList.slice().reverse().join("<br><br>");
 }
 
-function memoryClear() { memory = 0; }
+function memoryClear() { memory = 0; alert("Memory Cleared"); }
 function memoryRecall() { display.value += memory; }
 function memoryAdd() { memory += Number(display.value) || 0; }
 function memorySub() { memory -= Number(display.value) || 0; }
