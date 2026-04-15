@@ -31,11 +31,11 @@ body {
     position: relative;
 }
 
-/* LEFT SECTION - Now matches Picture 2 */
+/* LEFT SECTION */
 .left-section {
     width: 250px;
     color: white;
-    text-align: left; /* Aligned top-left per Picture 2 */
+    text-align: left;
 }
 
 /* TITLE STYLE */
@@ -80,7 +80,7 @@ body {
     border: none;
     border-radius: 15px;
     padding: 15px;
-    background: #000000; /* Darker display like Picture 2 */
+    background: #000000;
     color: white;
     box-sizing: border-box;
     margin-bottom: 20px;
@@ -108,21 +108,22 @@ button:active {
     transform: scale(0.95);
 }
 
-.operator { background: #ff9500; } /* Orange */
-.equal { background: #28a745; }    /* Green */
-.scientific { background: #3a7bd5; } /* Blue */
-.memory { background: #9d81e1; }    /* Purple */
+.operator { background: #ff9500; }
+.equal { background: #28a745; }
+.scientific { background: #3a7bd5; }
+.memory { background: #9d81e1; }
 
-/* HISTORY PANEL */
+/* UPDATED HISTORY PANEL */
 .history {
-    width: 280px;
-    height: 480px;
-    background: rgba(10, 15, 35, 0.6);
-    color: white;
-    padding: 20px;
-    border-radius: 20px;
+    width: 220px;
+    background: rgba(0, 0, 0, 0.3);
+    color: White;
+    padding: 15px;
+    border-radius: 15px;
+    height: 450px;
     overflow-y: auto;
-    font-family: monospace;
+    font-size: 14px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .history b {
@@ -263,7 +264,6 @@ function calculate() {
 
         let result = eval(expr);
         
-        // Formatting result to avoid long decimals
         if (!Number.isInteger(result)) {
             result = parseFloat(result.toFixed(8));
         }
@@ -283,7 +283,7 @@ function addHistory(item) {
     historyContent.innerHTML = historyList.slice().reverse().join("<br><br>");
 }
 
-function memoryClear() { memory = 0; alert("Memory Cleared"); }
+function memoryClear() { memory = 0; }
 function memoryRecall() { display.value += memory; }
 function memoryAdd() { memory += Number(display.value) || 0; }
 function memorySub() { memory -= Number(display.value) || 0; }
