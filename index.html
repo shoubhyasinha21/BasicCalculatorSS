@@ -12,7 +12,8 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #4b44b6, #2d345e, #1a1c2c);
+    /* Replaced hex with SlateBlue, DarkSlateBlue, and Black */
+    background: linear-gradient(135deg, SlateBlue, DarkSlateBlue, Black);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -63,7 +64,8 @@ body {
 /* CALCULATOR STYLING */
 .calculator {
     width: 380px;
-    background: rgba(255, 255, 255, 0.1);
+    /* Replaced hex with a named-color equivalent (DarkSlateBlue) with transparency */
+    background: rgba(72, 61, 139, 0.4); 
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 30px;
@@ -80,7 +82,7 @@ body {
     border: none;
     border-radius: 15px;
     padding: 15px;
-    background: #000000;
+    background: black; /* Replaced hex */
     color: white;
     box-sizing: border-box;
     margin-bottom: 20px;
@@ -108,10 +110,10 @@ button:active {
     transform: scale(0.95);
 }
 
-.operator { background: #ff9500; }
-.equal { background: #28a745; }
-.scientific { background: #3a7bd5; }
-.memory { background: #9d81e1; }
+.operator { background: Orange; } /* Replaced hex */
+.equal { background: ForestGreen; }    /* Replaced hex */
+.scientific { background: RoyalBlue; } /* Replaced hex */
+.memory { background: MediumPurple; }    /* Replaced hex */
 
 /* UPDATED HISTORY PANEL */
 .history {
