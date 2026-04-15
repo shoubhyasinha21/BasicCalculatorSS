@@ -5,72 +5,61 @@
 <meta charset="UTF-8">
 <title>SS Basic Calculator</title>
 
-<meta name="description" content="Free online basic calculator created by Shoubhya Sinha. Perform fast calculations easily.">
+<meta name="description" content="Free online basic calculator created by Shoubhya. Perform fast calculations easily.">
 <meta name="keywords" content="calculator, basic calculator, online calculator">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+
+/* BODY FIX */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, slateblue, midnightblue, darkslategray);
+    height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start; /* 🔥 TOP ALIGN */
+    padding-top: 20px;
 }
 
 /* MAIN LAYOUT */
 .wrapper {
     display: flex;
     gap: 20px;
-    align-items: center;
 }
 
-/* LEFT */
+/* LEFT SECTION */
 .left-section {
     width: 200px;
     color: white;
 }
 
+/* TITLE */
 .left-title {
     font-size: 28px;
     font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
+/* ABOUT */
 .about h2 {
-    font-size: 18px;
-    margin-bottom: 5px;
+    margin: 0;
+    font-size: 20px;
 }
 
 .about p {
     font-size: 14px;
-    line-height: 1.4;
 }
 
-/* CENTER */
+/* CALCULATOR */
 .calculator {
     width: 380px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255,0.1);
     backdrop-filter: blur(15px);
     border-radius: 25px;
     padding: 20px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* RIGHT */
-.history {
-    width: 220px;
-    height: 450px;
-    background: rgba(0, 0, 0, 0.3);
-    color: white;
-    padding: 15px;
-    border-radius: 15px;
-    overflow-y: auto;
-    font-size: 14px;
 }
 
 /* DISPLAY */
@@ -79,14 +68,14 @@ body {
     height: 70px;
     font-size: 28px;
     text-align: right;
-    border: none;
     border-radius: 15px;
     padding: 10px;
     background: rgba(0,0,0,0.4);
     color: white;
+    border: none;
 }
 
-/* BUTTONS */
+/* BUTTON GRID */
 .buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -96,22 +85,28 @@ body {
 
 button {
     padding: 15px;
-    font-size: 16px;
-    border: none;
     border-radius: 50px;
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    background: rgba(255,255,255,0.2);
     color: white;
-}
-
-button:hover {
-    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
 }
 
 .operator { background: darkorange; }
 .equal { background: forestgreen; }
 .scientific { background: royalblue; }
 .memory { background: mediumpurple; }
+
+/* HISTORY */
+.history {
+    width: 220px;
+    height: 450px;
+    background: rgba(0,0,0,0.3);
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    overflow-y: auto;
+}
 
 /* MOBILE FIX */
 @media (max-width: 768px) {
@@ -122,30 +117,9 @@ button:hover {
     .wrapper {
         transform: scale(0.7);
         transform-origin: top center;
-        height: 100vh;
-    }
-
-    .left-section {
-        width: 160px;
-    }
-
-    .calculator {
-        width: 320px;
-    }
-
-    .history {
-        width: 180px;
-        height: 400px;
-    }
-
-    .about h2 {
-        font-size: 16px;
-    }
-
-    .about p {
-        font-size: 12px;
     }
 }
+
 </style>
 </head>
 
@@ -160,9 +134,8 @@ button:hover {
         <div class="about">
             <h2>About This Calculator</h2>
             <p>
-                This is a free online scientific calculator with memory functions,
-                history tracking, and trigonometric calculations like sin, cos, tan,
-                log, and more.
+                Free scientific calculator with memory, history,
+                and functions like sin, cos, tan, log, etc.
             </p>
         </div>
     </div>
@@ -226,67 +199,32 @@ let historyBox = document.getElementById("historyBox");
 let memory = 0;
 let historyList = [];
 
-function append(value) {
-    display.value += value;
-}
-
-function clearDisplay() {
-    display.value = "";
-}
-
-function backspace() {
-    display.value = display.value.slice(0, -1);
-}
+function append(value) { display.value += value; }
+function clearDisplay() { display.value = ""; }
+function backspace() { display.value = display.value.slice(0, -1); }
 
 function toRadians(deg) {
     return deg * (Math.PI / 180);
 }
 
 function calculate() {
-    if (!display.value) return;
-
-    let originalExpr = display.value;
-    let expr = originalExpr;
-
+    let expr = display.value;
     try {
-        expr = expr.replace(/sin\(/g, "Math.sin(toRadians(");
-        expr = expr.replace(/cos\(/g, "Math.cos(toRadians(");
-        expr = expr.replace(/tan\(/g, "Math.tan(toRadians(");
-        expr = expr.replace(/√\(/g, "Math.sqrt(");
-        expr = expr.replace(/log\(/g, "Math.log10(");
-        expr = expr.replace(/ln\(/g, "Math.log(");
-        expr = expr.replace(/π/g, "Math.PI");
-        expr = expr.replace(/e/g, "Math.E");
-
-        let open = (expr.match(/\(/g) || []).length;
-        let close = (expr.match(/\)/g) || []).length;
-        while (open > close) {
-            expr += ")";
-            open--;
-        }
+        expr = expr.replace(/sin\(/g,"Math.sin(toRadians(")
+                   .replace(/cos\(/g,"Math.cos(toRadians(")
+                   .replace(/tan\(/g,"Math.tan(toRadians(")
+                   .replace(/√\(/g,"Math.sqrt(")
+                   .replace(/log\(/g,"Math.log10(")
+                   .replace(/ln\(/g,"Math.log(")
+                   .replace(/π/g,"Math.PI")
+                   .replace(/e/g,"Math.E");
 
         let result = eval(expr);
-        if (result % 1 !== 0) result = parseFloat(result.toFixed(8));
-
-        addHistory(originalExpr + " = " + result);
         display.value = result;
-
     } catch {
         display.value = "Error";
-        setTimeout(() => display.value = "", 1500);
     }
 }
-
-function addHistory(item) {
-    historyList.push(item);
-    if (historyList.length > 10) historyList.shift();
-    historyBox.innerHTML = "<b>History</b><hr>" + historyList.slice().reverse().join("<br>");
-}
-
-function memoryClear() { memory = 0; alert("Memory Cleared"); }
-function memoryRecall() { display.value += memory; }
-function memoryAdd() { memory += Number(display.value) || 0; }
-function memorySub() { memory -= Number(display.value) || 0; }
 </script>
 
 </body>
