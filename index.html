@@ -4,15 +4,13 @@
 <meta name="google-site-verification" content="HXwRMKnzO5b9227Hqda2rGde9Vrlco2SrnqJa1FQ7U0" />
 <meta charset="UTF-8">
 <title>SS Basic Calculator</title>
-
-<meta name="description" content="Free online basic calculator created by Shoubhya.">
+<meta name="description" content="Free online basic calculator created by Shoubhya Sinha.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
-    /* Using specific color names for the background gradient */
+    font-family: Valtin Demo, sans-serif;
     background: linear-gradient(135deg, SlateBlue, MidnightBlue, DarkSlateGray);
     display: flex;
     justify-content: center;
@@ -30,7 +28,6 @@ body {
     max-width: 1200px;
 }
 
-/* LEFT SECTION */
 .left-section {
     width: 250px;
     color: White;
@@ -40,7 +37,7 @@ body {
 .left-title {
     font-size: 32px;
     font-weight: bold;
-    line-height: 1.5;
+    line-height: 1.2;
     margin-bottom: 15px;
     text-transform: uppercase;
 }
@@ -56,10 +53,8 @@ body {
     font-size: 18px;
 }
 
-/* CALCULATOR STYLING */
 .calculator {
     width: 380px;
-    /* Replaced hex with DarkSlateBlue equivalent with transparency */
     background: rgba(72, 61, 139, 0.4); 
     backdrop-filter: blur(15px);
     border-radius: 25px;
@@ -104,13 +99,11 @@ button:hover {
     background: rgba(255, 255, 255, 0.4);
 }
 
-/* BUTTON COLOUR NAMES */
 .operator { background: DarkOrange; }
 .equal { background: ForestGreen; }
 .scientific { background: RoyalBlue; }
 .memory { background: MediumPurple; }
 
-/* HISTORY PANEL */
 .history {
     width: 220px;
     background: rgba(0, 0, 0, 0.3);
@@ -140,24 +133,16 @@ button:hover {
 <body>
 
 <div class="wrapper">
-
     <div class="left-section">
-        <div class="left-title">
-            SS BASIC<br>CALCULATOR
-        </div>
-
+        <div class="left-title">SS BASIC<br>CALCULATOR</div>
         <div class="about">
             <h3>About This Calculator</h3>
-            <p>
-                This is a free online scientific calculator with memory functions, 
-                history tracking, and trigonometric calculations like sin, cos, tan, log, and more.
-            </p>
+            <p>Free online scientific calculator with memory, history, and functions like sin, cos, tan, log, and more.</p>
         </div>
     </div>
 
     <div class="calculator">
         <input type="text" id="display" readonly placeholder="0">
-
         <div class="buttons">
             <button onclick="memoryClear()" class="memory">MC</button>
             <button onclick="memoryRecall()" class="memory">MR</button>
@@ -205,7 +190,6 @@ button:hover {
         <hr>
         <div id="historyContent"></div>
     </div>
-
 </div>
 
 <script>
@@ -226,44 +210,35 @@ function backspace() {
     display.value = display.value.slice(0, -1);
 }
 
-// Ensure this is global for eval
-window.toRadians = function(deg) {
+// Function used within the eval string
+function toRadians(deg) {
     return deg * (Math.PI / 180);
-};
+}
 
 function calculate() {
     if (!display.value) return;
-    
-    // Automatic parenthesis closing for sin(90 -> sin(90)
-    let openParentheses = (display.value.match(/\(/g) || []).length;
-    let closeParentheses = (display.value.match(/\)/g) || []).length;
-    while (openParentheses > closeParentheses) {
-        display.value += ")";
-        closeParentheses++;
-    }
-
     let originalExpr = display.value;
     let expr = originalExpr;
 
     try {
-        // Correct replacement logic
-        expr = expr.replace(/sin\(/g, "Math.sin(window.toRadians(");
-        expr = expr.replace(/cos\(/g, "Math.cos(window.toRadians(");
-        expr = expr.replace(/tan\(/g, "Math.tan(window.toRadians(");
+        // We use a helper to wrap the inner content of sin/cos/tan in toRadians
+        // This handles cases like sin(90) -> Math.sin(toRadians(90))
+        expr = expr.replace(/sin\(([^)]+)\)/g, "Math.sin(toRadians($1))");
+        expr = expr.replace(/cos\(([^)]+)\)/g, "Math.cos(toRadians($1))");
+        expr = expr.replace(/tan\(([^)]+)\)/g, "Math.tan(toRadians($1))");
+        
+        // Handle single replacements for other symbols
         expr = expr.replace(/√\(/g, "Math.sqrt(");
         expr = expr.replace(/log\(/g, "Math.log10(");
         expr = expr.replace(/ln\(/g, "Math.log(");
         expr = expr.replace(/π/g, "Math.PI");
         expr = expr.replace(/e/g, "Math.E");
 
-        // Important: Close the toRadians parenthesis for trig functions
-        // This regex finds the end of the trig function arguments and adds a second ')'
-        expr = expr.replace(/(Math\.(sin|cos|tan)\(window\.toRadians\([^)]+)\)/g, "$1))");
-
         let result = eval(expr);
         
+        // Fix for floating point precision issues (e.g. 0.99999999 -> 1)
         if (!Number.isInteger(result)) {
-            result = parseFloat(result.toFixed(8));
+            result = parseFloat(result.toFixed(10));
         }
 
         addHistory(originalExpr + " = " + result);
