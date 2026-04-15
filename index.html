@@ -20,11 +20,28 @@
     justify-content: center;
     min-height: 100vh;
 }
-        .wrapper {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
+        @media (max-width: 768px) {
+    .wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .left-title {
+        width: auto;
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .calculator {
+        width: 90%;
+    }
+
+    .history {
+        width: 90%;
+        height: auto;
+        margin-top: 10px;
+    }
+}
 
         .left-title {
             width: 180px;
