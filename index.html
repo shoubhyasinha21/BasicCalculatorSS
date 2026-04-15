@@ -10,17 +10,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            /* Using specific color names */
-            background: linear-gradient(135deg, slateblue, midnightblue, darkslategray);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
+       body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, slateblue, midnightblue, darkslategray);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
         .wrapper {
             display: flex;
             gap: 20px;
@@ -103,9 +102,6 @@
 
 <div class="wrapper">
     <div class="left-title">SS BASIC<br>CALCULATOR</div>
-
-    </div>
-
     <div class="calculator">
         <input type="text" id="display" readonly>
         <div class="buttons">
@@ -153,6 +149,12 @@
     <div class="history" id="historyBox">
         <b>History</b><hr>
     </div>
+</div>
+    <div style="text-align:center; margin-top:20px;">
+    <h2 style="color:white;">About This Calculator</h2>
+    <p style="color:white; max-width:600px; margin:auto;">
+        This is a free online scientific calculator with memory functions, history tracking, and trigonometric calculations like sin, cos, tan, log, and more.
+    </p>
 </div>
 
 <script>
