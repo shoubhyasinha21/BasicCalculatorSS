@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shoubhyasinha21.github.io/BasicCalculatorSS/sitemap.xml
